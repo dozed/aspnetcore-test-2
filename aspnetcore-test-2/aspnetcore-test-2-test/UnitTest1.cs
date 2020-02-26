@@ -1,14 +1,47 @@
+using System;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Hosting;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace aspnetcore_test_2_test
 {
     public class UnitTest1
     {
+        private ITestOutputHelper _output;
+
+        public UnitTest1(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+        [Fact]
+        public void Test2()
+        {
+            
+            var contentDispositionHeader = new System.Net.Mime.ContentDisposition()
+            {
+                FileName = "foo bar.pdf",
+                DispositionType = "attachment"
+            };
+
+            var result = contentDispositionHeader.ToString();
+
+            _output.WriteLine(result);
+
+            var parsed = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(result);
+
+            Assert.Equal("foo bar.pdf", parsed.FileName);
+
+            var parsed0 = System.Net.Http.Headers.ContentDispositionHeaderValue.Parse(result);
+
+            Assert.Equal("foo bar.pdf", parsed0.FileName);
+            
+        }
+        
         [Fact]
         public async void Test1()
         {
